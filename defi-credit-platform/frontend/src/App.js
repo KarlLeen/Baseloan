@@ -19,6 +19,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Image,
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { ethers } from 'ethers';
@@ -27,6 +28,7 @@ import GroupLending from './components/GroupLending';
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import LandingPage from './components/LandingPage';
+import DAOApproval from './components/DAOApproval';
 
 const LENDING_PLATFORM_ADDRESS = "0x03A54407c196c56FA54732FfBFF1FDfaE6b79ADb";
 
@@ -341,44 +343,100 @@ function App() {
     );
   };
 
+  const hoverBgColor = useColorModeValue('blue.50', 'blue.900');
+
   return (
     <ChakraProvider>
       <Box minH="100vh" bg={bgColor}>
-        <Container maxW="container.xl" py={10}>
-          <VStack spacing={8} align="stretch">
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Heading size="xl" color={headingColor}>
-                普惠金融 DeFi 平台
-              </Heading>
-              <HStack spacing={4}>
-                {account && (
-                  <Menu>
-                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                      {userRole === 'admin' ? '管理员模式' : '用户模式'}
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem onClick={() => handleRoleSelect('user')}>用户模式</MenuItem>
-                      <MenuItem onClick={() => handleRoleSelect('admin')}>管理员模式</MenuItem>
-                    </MenuList>
-                  </Menu>
-                )}
-                <Button
-                  onClick={connectWallet}
-                  colorScheme="blue"
-                  size="lg"
-                  variant="outline"
-                  isLoading={isConnecting}
-                  loadingText="连接中"
-                >
-                  {account
-                    ? `已连接: ${account.slice(0, 6)}...${account.slice(-4)}`
-                    : '连接钱包'}
-                </Button>
-              </HStack>
-            </Box>
+        <Container maxW="container.xl" py={6}>
+          <Box
+            borderRadius="xl"
+            bg={useColorModeValue('white', 'gray.800')}
+            borderColor={borderColor}
+            borderWidth="1px"
+            boxShadow="xl"
+            position="relative"
+            overflow="hidden"
+            p={6}
+          >
+            <Box
+              position="absolute"
+              top="0"
+              right="0"
+              width="300px"
+              height="300px"
+              bgGradient="radial(blue.50, transparent)"
+              opacity="0.4"
+              transform="translate(30%, -30%)"
+              zIndex="0"
+            />
+            <VStack spacing={6} align="stretch" position="relative" zIndex="1">
+              <Box 
+                display="flex" 
+                justifyContent="space-between" 
+                alignItems="center"
+                mb={2}
+              >
+                <HStack spacing={4}>
+                  <Box
+                    as="img"
+                    src="https://raw.githubusercontent.com/base-org/brand-kit/001c0e9b40a67799ebe0418671ac4e02a0c683ce/logo/in-product/Base_Network_Logo.svg"
+                    alt="Base Logo"
+                    w="40px"
+                    h="40px"
+                  />
+                  <Heading 
+                    size="xl" 
+                    bgGradient="linear(to-r, blue.400, teal.400)"
+                    bgClip="text"
+                    fontWeight="extrabold"
+                  >
+                    Baseloan
+                  </Heading>
+                </HStack>
+                <HStack spacing={4}>
+                  {account && (
+                    <Menu>
+                      <MenuButton 
+                        as={Button} 
+                        rightIcon={<ChevronDownIcon />}
+                        variant="ghost"
+                        _hover={{
+                          bg: hoverBgColor,
+                        }}
+                      >
+                        {userRole === 'admin' ? 'Admin' : 'User'}
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => handleRoleSelect('user')}>User</MenuItem>
+                        <MenuItem onClick={() => handleRoleSelect('admin')}>Admin</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  )}
+                  <Button
+                    onClick={connectWallet}
+                    colorScheme="blue"
+                    size="lg"
+                    variant="outline"
+                    isLoading={isConnecting}
+                    loadingText="connecting"
+                    _hover={{
+                      bg: hoverBgColor,
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'md',
+                    }}
+                    transition="all 0.2s"
+                  >
+                    {account
+                      ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`
+                      : 'Connect Wallet'}
+                  </Button>
+                </HStack>
+              </Box>
 
-            {renderContent()}
-          </VStack>
+              {renderContent()}
+            </VStack>
+          </Box>
         </Container>
       </Box>
     </ChakraProvider>
